@@ -46,6 +46,7 @@ class ImagePublisher : public rclcpp::Node
 {
 public:
   explicit ImagePublisher(const rclcpp::NodeOptions & options);
+  ~ImagePublisher();
 
 protected:
   void onInit();

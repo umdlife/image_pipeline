@@ -98,6 +98,10 @@ ImagePublisher::ImagePublisher(const rclcpp::NodeOptions & options)
   on_set_parameters_callback_handle_ = this->add_on_set_parameters_callback(param_change_callback);
 }
 
+ImagePublisher::~ImagePublisher()
+{
+}
+
 void ImagePublisher::reconfigureCallback()
 {
   timer_ = this->create_wall_timer(
@@ -220,9 +224,9 @@ void ImagePublisher::onInit()
 
 }  // namespace image_publisher
 
-#include "rclcpp_components/register_node_macro.hpp"
+//#include "rclcpp_components/register_node_macro.hpp"
 
 // Register the component with class_loader.
 // This acts as a sort of entry point, allowing the component to be discoverable when its library
 // is being loaded into a running process.
-RCLCPP_COMPONENTS_REGISTER_NODE(image_publisher::ImagePublisher)
+//RCLCPP_COMPONENTS_REGISTER_NODE(image_publisher::ImagePublisher)

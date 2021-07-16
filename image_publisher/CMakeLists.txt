@@ -10,22 +10,63 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake_auto REQUIRED)
-ament_auto_find_build_dependencies()
-
-find_package(OpenCV REQUIRED COMPONENTS core imgcodecs videoio)
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(nav2_util REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(camera_info_manager REQUIRED)
+find_package(OpenCV REQUIRED)
 message(STATUS "opencv version ${OpenCV_VERSION}")
 
-ament_auto_add_library(image_publisher SHARED src/image_publisher.cpp)
-target_link_libraries(image_publisher ${OpenCV_LIBRARIES})
-rclcpp_components_register_nodes(image_publisher "${PROJECT_NAME}::ImagePublisher")
-set(node_plugins "${node_plugins}${PROJECT_NAME}::ImagePublisher;$<TARGET_FILE:ImagePublisher>\n")
+include_directories(include)
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-ament_auto_add_executable(image_publisher_node src/image_publisher_node.cpp)
+set(dependencies
+  rclcpp
+  nav2_util
+  nav2_msgs
+  rclcpp_lifecycle
+  cv_bridge
+  image_transport
+  sensor_msgs
+  camera_info_manager
+  OpenCV
+)
+
+# Detection Visualizer
+add_library(image_publisher SHARED
+  src/image_publisher.cpp)
+ament_target_dependencies(
+  image_publisher
+  ${dependencies}
+)
+
+add_executable(image_publisher_node src/image_publisher_node.cpp)
+target_include_directories(image_publisher_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  image_publisher_node
+  "rclcpp"
+)
+target_link_libraries( image_publisher_node ${OpenCV_LIBS} image_publisher )
+
+install(TARGETS image_publisher_node
+  image_publisher
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_auto_package(INSTALL_TO_SHARE launch)
+ament_package()
