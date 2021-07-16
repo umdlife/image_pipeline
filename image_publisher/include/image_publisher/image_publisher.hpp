@@ -54,6 +54,31 @@ protected:
   void onInit();
   void doWork();
   void reconfigureCallback();
+  /*
+   * @brief Lifecycle configure
+   */
+  nav2_util::CallbackReturn
+  on_configure(const rclcpp_lifecycle::State& state) override;
+  /*
+   * @brief Lifecycle activate
+   */
+  nav2_util::CallbackReturn
+  on_activate(const rclcpp_lifecycle::State& state) override;
+  /*
+   * @brief Lifecycle deactivate
+   */
+  nav2_util::CallbackReturn
+  on_deactivate(const rclcpp_lifecycle::State& state) override;
+  /*
+   * @brief Lifecycle cleanup
+   */
+  nav2_util::CallbackReturn
+  on_cleanup(const rclcpp_lifecycle::State& state) override;
+  /*
+   * @brief Lifecycle shutdown
+   */
+  nav2_util::CallbackReturn
+  on_shutdown(const rclcpp_lifecycle::State& state) override;
 
 private:
   image_transport::CameraPublisher pub_;
