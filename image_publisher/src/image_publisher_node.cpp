@@ -47,7 +47,6 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  //rclcpp::NodeOptions options;
   auto publisher = std::make_shared<image_publisher::ImagePublisher>();
   publisher->declare_parameter("filename", argv[1]);
 
