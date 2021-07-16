@@ -45,10 +45,10 @@ namespace image_publisher
 
 using namespace std::chrono_literals;
 
-ImagePublisher::ImagePublisher(const rclcpp::NodeOptions & options)
-: Node("ImagePublisher", options)
+ImagePublisher::ImagePublisher()
+: nav2_util::LifecycleNode("ImagePublisher", "", true)
 {
-  pub_ = image_transport::create_camera_publisher(this, "image_raw");
+  pub_ = image_transport::create_camera_publisher(&*rclcpp_node_, "image_raw");
 
   flip_horizontal_ = this->declare_parameter("flip_horizontal", false);
   flip_vertical_ = this->declare_parameter("flip_vertical", false);
@@ -108,7 +108,7 @@ void ImagePublisher::reconfigureCallback()
     std::chrono::milliseconds(static_cast<int>(1000 / publish_rate_)),
     std::bind(&ImagePublisher::doWork, this));
 
-  camera_info_manager::CameraInfoManager c(this);
+  camera_info_manager::CameraInfoManager c(&*rclcpp_node_);
   if (!camera_info_url_.empty()) {
     RCLCPP_INFO(get_logger(), "camera_info_url exist");
     try {

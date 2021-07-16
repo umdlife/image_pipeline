@@ -35,6 +35,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <image_publisher/visibility.h>
 #include <image_transport/image_transport.hpp>
+#include "nav2_util/lifecycle_node.hpp"
+#include <rclcpp/rclcpp.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <string>
@@ -42,10 +44,10 @@
 namespace image_publisher
 {
 
-class ImagePublisher : public rclcpp::Node
+class ImagePublisher : public nav2_util::LifecycleNode
 {
 public:
-  explicit ImagePublisher(const rclcpp::NodeOptions & options);
+  ImagePublisher();
   ~ImagePublisher();
 
 protected:
